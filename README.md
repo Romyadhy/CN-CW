@@ -12,11 +12,11 @@ _A lightweight, zero-overhead educational platform for early childhood learning.
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-v4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen.svg?style=flat-square)](./test/verify.ts)
 
-<br />
+<!-- <br /> -->
 
-[Quick Start](#-quick-start) • [Core Games](#-core-games) • [Architecture](#-architecture) • [Engine Highlights](#-engine-highlights) • [Documentation](#-documentation)
+<!-- [Quick Start](#-quick-start) • [Core Games](#-core-games) • [Architecture](#-architecture) • [Engine Highlights](#-engine-highlights) • [Documentation](#-documentation) -->
 
-<br />
+<!-- <br /> -->
 
 </div>
 
