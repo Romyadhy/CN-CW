@@ -1,62 +1,162 @@
-# CN-CW 🧩
+<div align="center">
 
-> **Calculated Number & Complete Word** — A responsive, adaptive educational mini-game web app designed for early childhood learners (ages 3–6).
+# CN-CW
 
----
+**Calculated Number & Complete Word**  
+*A lightweight, zero-overhead educational platform for early childhood learning (ages 3–6).*
 
-## 🌟 Overview
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8.0-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-v4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen.svg?style=flat-square)](./test/verify.ts)
 
-**CN-CW** offers a distraction-free, child-friendly learning experience centered around two foundational skills: early numeracy and language comprehension. Built with a zero-penalty philosophy, the app encourages exploration without the pressure of timers, scores deductions, or explicit levels.
+<br />
 
----
+[Quick Start](#-quick-start) • [Core Games](#-core-games) • [Architecture](#-architecture) • [Engine Highlights](#-engine-highlights) • [Documentation](#-documentation)
 
-## ✨ Key Highlights
+<br />
 
-- **🔢 Calculate Number (CN)**: Interactive object counting with procedurally generated quantities and anti-repetition guards.
-- **📖 Complete Word (CW)**: Curated Indonesian sentence-completion exercises spanning vocabulary, action verbs, and contextual thinking.
-- **🧠 Invisible Adaptive Difficulty**: Silently adjusts question difficulty based on rolling session performance without exposing stressful level badges or progression gates to the child.
-
----
-
-## 🛠️ Tech Stack
-
-- **Framework**: [React 19](https://react.dev/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Build Tool**: [Vite 8](https://vitejs.dev/)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **Routing**: [React Router v7](https://reactrouter.com/)
-- **Testing**: [tsx](https://github.com/privatenumber/tsx) + Node Native Assert
+</div>
 
 ---
 
-## 🚀 Getting Started
+## 📌 Overview
+
+**CN-CW** is a client-side Single Page Application (SPA) designed to foster foundational numeracy and language comprehension in young children (*PAUD / TK*). Built around an evidence-based **zero-penalty pedagogical framework**, the system eliminates artificial timers, score penalties, and overt level gates—enabling stress-free, self-paced mastery.
+
+---
+
+## 🎮 Core Games
+
+| Module | Game Mode | Focus Skill | Progression Range | Input Paradigm |
+|:---|:---|:---|:---|:---|
+| **CN** | **Hitung Angka** | Numeracy & Object Counting | 1–5 objects (Basic)<br>1–10 objects (Expanded) | 3-Choice Multiple Choice |
+| **CW** | **Lengkapi Kata** | Indonesian Sentence Completion | Vocabulary (L1)<br>Action Verbs (L2)<br>Contextual Logic (L3) | 3-Choice Vocabulary Fill |
+
+---
+
+## ⚡ Engine Highlights
+
+### 1. Invisible Adaptive Engine
+The platform automatically monitors child competence without exposing stressful level numbers or progression barriers:
+- **Rolling Window**: Analyzes rolling batches of 8 completed questions.
+- **Promotion**: Advances when $\ge 7 / 8$ questions are solved correctly on the first attempt without hints.
+- **Demotion**: Gently reduces complexity if $\le 4 / 8$ first-attempt accuracy is observed.
+- **Anti-Oscillation Cooldown**: Enforces an 8-observation observation buffer before allowing subsequent adjustments.
+- **Domain Independence**: Numeracy and vocabulary progress track independently with zero cross-game performance leakage.
+
+### 2. 3-Attempt Secret-Answer Protection
+To cultivate genuine problem-solving rather than rote guessing:
+- **Attempts 1–2**: Wrong options are gently disabled (muted red), leaving remaining possibilities active while keeping the correct answer hidden.
+- **Attempt 3 (Auto-Reveal)**: If unresolved after 3 tries, the system warmly reveals the correct answer and displays a friendly continue prompt to prevent frustration.
+
+### 3. Responsive Proportional Scaling
+Custom-engineered layouts optimized across diverse hardware environments:
+- **Mobile (`< 640px`)**: Thumb-first vertical stacking, compact padding, zero-scroll containment.
+- **Laptop & Desktop (`768px – 1080p`)**: Proportional card geometry with interactive hover transitions.
+- **Large Classroom Displays / 4K TVs (`≥ 1536px`)**: Jumbo typography (`text-6xl`), high-visibility buttons (`py-10`), and expansive counting targets (`text-9xl`) visible across a classroom.
+
+---
+
+## 🏛️ Architecture & Session Flow
+
+```mermaid
+flowchart TD
+    Start([User Selects Game]) --> Init[Load Game Session]
+    Init --> Gen[Question Generator]
+    
+    subgraph Generator Layer
+        Gen --> AntiRep[Anti-Repetition Filter]
+        AntiRep --> DiffFilter[Apply Difficulty Bounds]
+        DiffFilter --> Shuffle[Fisher-Yates 3-Way Shuffle]
+    end
+
+    Shuffle --> Render[Display Interactive Card]
+    Render --> Answer{Child Submits Answer}
+
+    Answer -->|Correct| Success[Score +1 & Celebration State]
+    Answer -->|Wrong: Attempt 1 or 2| Retry[Disable Wrong Option & Prompt Retry]
+    Answer -->|Wrong: Attempt 3| Reveal[Auto-Reveal Correct Answer]
+
+    Retry --> Answer
+    Success --> Tracker[Record Session Observation]
+    Reveal --> Tracker
+
+    subgraph Adaptive Engine
+        Tracker --> WindowCheck{Window >= 8 & Cooldown Clear?}
+        WindowCheck -->|Yes: >= 7/8 Correct| Promote[Advance Difficulty]
+        WindowCheck -->|Yes: <= 4/8 Correct| Demote[Lower Difficulty]
+        WindowCheck -->|No / Intermediate| Retain[Retain Level]
+    end
+
+    Promote --> NextQ[Load Next Question]
+    Demote --> NextQ
+    Retain --> NextQ
+    NextQ --> Gen
+```
+
+---
+
+## 📂 Project Structure
+
+```text
+CN-CW/
+├── src/
+│   ├── data/
+│   │   └── countingObjects.ts        # 10 neutral objects & icon registry
+│   ├── engine/
+│   │   ├── questionTypes.ts          # Unified domain types & session models
+│   │   ├── performanceTracker.ts     # In-memory evaluation recorder
+│   │   └── adaptiveDifficulty.ts     # Rule-based difficulty progression engine
+│   ├── hooks/
+│   │   └── useGameSession.ts         # Generic 3-attempt session manager
+│   ├── pages/
+│   │   ├── HomePage.tsx              # Portal menu & hardware scaling container
+│   │   └── games/
+│   │       ├── counting/             # CN: Hitung Angka generator & view
+│   │       └── sentences/            # CW: Lengkapi Kata bank & view
+│   ├── App.tsx                       # Client-side router registry
+│   └── main.tsx                      # SPA entry point
+├── test/
+│   └── verify.ts                     # Automated test suite (200+ iterations)
+├── vercel.json                       # Static rewrite rules for SPA hosting
+├── REKAP_DATA.md                     # Data backbone & generator pseudocode
+└── ROADMAP_CHECKLIST.md              # Progress tracker & engineering backlog
+```
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18.0.0 or higher)
-- `npm`
+- **Node.js**: `v18.0.0` or higher
+- **npm**: `v9.0.0` or higher
 
 ### Installation
 
 ```bash
+# Clone the repository
 git clone https://github.com/your-username/cncw.git
 cd cncw
+
+# Install dependencies
 npm install
 ```
 
 ### Development
 
-Run the local development server with hot-module replacement (HMR):
+Start the local Vite dev server with hot module replacement:
 
 ```bash
 npm run dev
 ```
+Navigate to `http://localhost:5173` in your browser.
 
-Visit `http://localhost:5173` in your browser.
+### Verification & Testing
 
-### Testing
-
-Run automated tests for procedural generators, question banks, and the adaptive difficulty engine:
+Execute the test suite covering generators, bank integrity, boundary checks, and adaptive state machine behavior:
 
 ```bash
 npm test
@@ -64,7 +164,7 @@ npm test
 
 ### Production Build
 
-Typecheck and bundle optimized static assets into the `dist/` folder:
+Typecheck and generate an optimized static production bundle in `dist/`:
 
 ```bash
 npm run build
@@ -72,6 +172,26 @@ npm run build
 
 ---
 
-## 📄 Project Documentation
+## 🌐 Deployment
 
-- **[ROADMAP_CHECKLIST.md](./ROADMAP_CHECKLIST.md)**: Development checklist, current implementation status, and upcoming feature backlog.
+The application is engineered as a zero-backend, zero-database static Single Page Application. It is pre-configured for zero-friction deployment on **Vercel**:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+1. Connect your repository to Vercel.
+2. Select **Vite** as the framework preset.
+3. Build command: `npm run build` | Output directory: `dist`.
+4. Deploy. Client-side routes (`/counting`, `/sentences`) are automatically handled via `vercel.json`.
+
+---
+
+## 📚 Technical Documentation
+
+- **[REKAP_DATA.md](./REKAP_DATA.md)**: Deep dive into procedural counting algorithms, 20-question curated sentence bank, and pseudocode.
+- **[ROADMAP_CHECKLIST.md](./ROADMAP_CHECKLIST.md)**: Live progress tracking, known technical debt, and prioritised feature backlog.
+
+---
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
