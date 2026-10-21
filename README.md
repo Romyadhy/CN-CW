@@ -1,64 +1,77 @@
-# CNCW Little Learners 🌿
+# CN-CW 🧩
 
-Sebuah website edukasi permainan mini anak usia dini (PAUD/TK usia 3–6 tahun) dalam Bahasa Indonesia.
-
-## Fitur Utama
-
-1. **Kebun Angka (`/counting`)**: Menghitung objek buah-buahan di kebun (1–5 untuk pemula, adaptif hingga 1–10) dan memilih angka yang benar dari 3 pilihan.
-2. **Kebun Kalimat (`/sentences`)**: Melengkapi kalimat rumpang bahasa Indonesia dengan memilih kata yang paling tepat dari 3 pilihan.
-3. **Sistem Adaptif Tersembunyi (Invisible Adaptive Difficulty)**:
-   - Kesulitan bertambah atau berkurang secara otomatis berdasarkan performa 8 soal terakhir tanpa menampilkan label level kepada anak.
-   - Performa Kebun Angka dan Kebun Kalimat terpisah sepenuhnya.
-4. **Desain Ramah Anak**: Tombol sentuh besar, warna cerah bertema kebun buah, respons positif dan kesempatan mengulang tanpa penalti.
+> **Calculated Number & Complete Word** — A responsive, adaptive educational mini-game web app designed for early childhood learners (ages 3–6).
 
 ---
 
-## Persyaratan Sistem
+## 🌟 Overview
 
-- Node.js (v18 ke atas)
-- npm
+**CN-CW** offers a distraction-free, child-friendly learning experience centered around two foundational skills: early numeracy and language comprehension. Built with a zero-penalty philosophy, the app encourages exploration without the pressure of timers, scores deductions, or explicit levels.
 
-## Cara Menjalankan
+---
 
-### 1. Instal Dependensi
+## ✨ Key Highlights
+
+- **🔢 Calculate Number (CN)**: Interactive object counting with procedurally generated quantities and anti-repetition guards.
+- **📖 Complete Word (CW)**: Curated Indonesian sentence-completion exercises spanning vocabulary, action verbs, and contextual thinking.
+- **🧠 Invisible Adaptive Difficulty**: Silently adjusts question difficulty based on rolling session performance without exposing stressful level badges or progression gates to the child.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [React 19](https://react.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool**: [Vite 8](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Routing**: [React Router v7](https://reactrouter.com/)
+- **Testing**: [tsx](https://github.com/privatenumber/tsx) + Node Native Assert
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18.0.0 or higher)
+- `npm`
+
+### Installation
+
 ```bash
+git clone https://github.com/your-username/cncw.git
+cd cncw
 npm install
 ```
 
-### 2. Mode Pengembangan (Development)
+### Development
+
+Run the local development server with hot-module replacement (HMR):
+
 ```bash
 npm run dev
 ```
-Buka browser di alamat lokal yang tertera (biasanya `http://localhost:5173`).
 
-### 3. Menjalankan Tes
+Visit `http://localhost:5173` in your browser.
+
+### Testing
+
+Run automated tests for procedural generators, question banks, and the adaptive difficulty engine:
+
 ```bash
 npm test
 ```
-Menjalankan tes validasi logika generator angka, generator kalimat, dan mesin kesulitan adaptif.
 
-### 4. Build untuk Produksi
+### Production Build
+
+Typecheck and bundle optimized static assets into the `dist/` folder:
+
 ```bash
 npm run build
 ```
-File hasil build akan berada di direktori `dist/`.
 
 ---
 
-## Panduan Deployment ke Vercel
+## 📄 Project Documentation
 
-Aplikasi ini adalah Single Page Application (SPA) statis yang siap di-deploy ke Vercel tanpa backend:
-
-1. Push repository ini ke GitHub / GitLab.
-2. Buka dashboard [Vercel](https://vercel.com) dan impor repository ini.
-3. Konfigurasi build otomatis:
-   - **Framework Preset**: Vite
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-4. Untuk routing client-side (agar URL seperti `/counting` dapat diakses langsung tanpa 404), tambahkan file `vercel.json` dengan konfigurasi rewrite jika diperlukan:
-```json
-{
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
-}
-```
-5. Klik **Deploy**.
+- **[ROADMAP_CHECKLIST.md](./ROADMAP_CHECKLIST.md)**: Development checklist, current implementation status, and upcoming feature backlog.
