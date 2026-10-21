@@ -3,7 +3,7 @@
 # CN-CW
 
 **Calculated Number & Complete Word**  
-*A lightweight, zero-overhead educational platform for early childhood learning (ages 3–6).*
+_A lightweight, zero-overhead educational platform for early childhood learning (ages 3–6)._
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -24,15 +24,15 @@
 
 ## 📌 Overview
 
-**CN-CW** is a client-side Single Page Application (SPA) designed to foster foundational numeracy and language comprehension in young children (*PAUD / TK*). Built around an evidence-based **zero-penalty pedagogical framework**, the system eliminates artificial timers, score penalties, and overt level gates—enabling stress-free, self-paced mastery.
+**CN-CW** is a client-side Single Page Application (SPA) designed to foster foundational numeracy and language comprehension in young children (_PAUD / TK_). Built around an evidence-based **zero-penalty pedagogical framework**, the system eliminates artificial timers, score penalties, and overt level gates—enabling stress-free, self-paced mastery.
 
 ---
 
 ## 🎮 Core Games
 
-| Module | Game Mode | Focus Skill | Progression Range | Input Paradigm |
-|:---|:---|:---|:---|:---|
-| **CN** | **Hitung Angka** | Numeracy & Object Counting | 1–5 objects (Basic)<br>1–10 objects (Expanded) | 3-Choice Multiple Choice |
+| Module | Game Mode         | Focus Skill                    | Progression Range                                             | Input Paradigm           |
+| :----- | :---------------- | :----------------------------- | :------------------------------------------------------------ | :----------------------- |
+| **CN** | **Hitung Angka**  | Numeracy & Object Counting     | 1–5 objects (Basic)<br>1–10 objects (Expanded)                | 3-Choice Multiple Choice |
 | **CW** | **Lengkapi Kata** | Indonesian Sentence Completion | Vocabulary (L1)<br>Action Verbs (L2)<br>Contextual Logic (L3) | 3-Choice Vocabulary Fill |
 
 ---
@@ -40,7 +40,9 @@
 ## ⚡ Engine Highlights
 
 ### 1. Invisible Adaptive Engine
+
 The platform automatically monitors child competence without exposing stressful level numbers or progression barriers:
+
 - **Rolling Window**: Analyzes rolling batches of 8 completed questions.
 - **Promotion**: Advances when $\ge 7 / 8$ questions are solved correctly on the first attempt without hints.
 - **Demotion**: Gently reduces complexity if $\le 4 / 8$ first-attempt accuracy is observed.
@@ -48,12 +50,16 @@ The platform automatically monitors child competence without exposing stressful 
 - **Domain Independence**: Numeracy and vocabulary progress track independently with zero cross-game performance leakage.
 
 ### 2. 3-Attempt Secret-Answer Protection
+
 To cultivate genuine problem-solving rather than rote guessing:
+
 - **Attempts 1–2**: Wrong options are gently disabled (muted red), leaving remaining possibilities active while keeping the correct answer hidden.
 - **Attempt 3 (Auto-Reveal)**: If unresolved after 3 tries, the system warmly reveals the correct answer and displays a friendly continue prompt to prevent frustration.
 
 ### 3. Responsive Proportional Scaling
+
 Custom-engineered layouts optimized across diverse hardware environments:
+
 - **Mobile (`< 640px`)**: Thumb-first vertical stacking, compact padding, zero-scroll containment.
 - **Laptop & Desktop (`768px – 1080p`)**: Proportional card geometry with interactive hover transitions.
 - **Large Classroom Displays / 4K TVs (`≥ 1536px`)**: Jumbo typography (`text-6xl`), high-visibility buttons (`py-10`), and expansive counting targets (`text-9xl`) visible across a classroom.
@@ -66,7 +72,7 @@ Custom-engineered layouts optimized across diverse hardware environments:
 flowchart TD
     Start([User Selects Game]) --> Init[Load Game Session]
     Init --> Gen[Question Generator]
-    
+
     subgraph Generator Layer
         Gen --> AntiRep[Anti-Repetition Filter]
         AntiRep --> DiffFilter[Apply Difficulty Bounds]
@@ -131,6 +137,7 @@ CN-CW/
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Node.js**: `v18.0.0` or higher
 - **npm**: `v9.0.0` or higher
 
@@ -152,6 +159,7 @@ Start the local Vite dev server with hot module replacement:
 ```bash
 npm run dev
 ```
+
 Navigate to `http://localhost:5173` in your browser.
 
 ### Verification & Testing
@@ -182,13 +190,6 @@ The application is engineered as a zero-backend, zero-database static Single Pag
 2. Select **Vite** as the framework preset.
 3. Build command: `npm run build` | Output directory: `dist`.
 4. Deploy. Client-side routes (`/counting`, `/sentences`) are automatically handled via `vercel.json`.
-
----
-
-## 📚 Technical Documentation
-
-- **[REKAP_DATA.md](./REKAP_DATA.md)**: Deep dive into procedural counting algorithms, 20-question curated sentence bank, and pseudocode.
-- **[ROADMAP_CHECKLIST.md](./ROADMAP_CHECKLIST.md)**: Live progress tracking, known technical debt, and prioritised feature backlog.
 
 ---
 
