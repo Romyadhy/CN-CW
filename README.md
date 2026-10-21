@@ -3,7 +3,7 @@
 # CN-CW
 
 **Calculated Number & Complete Word**  
-_A lightweight, zero-overhead educational platform for early childhood learning (ages 3–6)._
+_A lightweight, zero-overhead educational platform for early childhood learning._
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -37,102 +37,73 @@ _A lightweight, zero-overhead educational platform for early childhood learning 
 
 ---
 
-## ⚡ Engine Highlights
+<!-- ## ⚡ Engine Highlights -->
+<!---->
+<!-- ### 1. Invisible Adaptive Engine -->
+<!---->
+<!-- The platform automatically monitors child competence without exposing stressful level numbers or progression barriers: -->
+<!---->
+<!-- - **Rolling Window**: Analyzes rolling batches of 8 completed questions. -->
+<!-- - **Promotion**: Advances when $\ge 7 / 8$ questions are solved correctly on the first attempt without hints. -->
+<!-- - **Demotion**: Gently reduces complexity if $\le 4 / 8$ first-attempt accuracy is observed. -->
+<!-- - **Anti-Oscillation Cooldown**: Enforces an 8-observation observation buffer before allowing subsequent adjustments. -->
+<!-- - **Domain Independence**: Numeracy and vocabulary progress track independently with zero cross-game performance leakage. -->
+<!---->
+<!-- ### 2. 3-Attempt Secret-Answer Protection -->
+<!---->
+<!-- To cultivate genuine problem-solving rather than rote guessing: -->
+<!---->
+<!-- - **Attempts 1–2**: Wrong options are gently disabled (muted red), leaving remaining possibilities active while keeping the correct answer hidden. -->
+<!-- - **Attempt 3 (Auto-Reveal)**: If unresolved after 3 tries, the system warmly reveals the correct answer and displays a friendly continue prompt to prevent frustration. -->
+<!---->
+<!-- ### 3. Responsive Proportional Scaling -->
+<!---->
+<!-- Custom-engineered layouts optimized across diverse hardware environments: -->
+<!---->
+<!-- - **Mobile (`< 640px`)**: Thumb-first vertical stacking, compact padding, zero-scroll containment. -->
+<!-- - **Laptop & Desktop (`768px – 1080p`)**: Proportional card geometry with interactive hover transitions. -->
+<!-- - **Large Classroom Displays / 4K TVs (`≥ 1536px`)**: Jumbo typography (`text-6xl`), high-visibility buttons (`py-10`), and expansive counting targets (`text-9xl`) visible across a classroom. -->
+<!---->
+<!-- --- -->
 
-### 1. Invisible Adaptive Engine
-
-The platform automatically monitors child competence without exposing stressful level numbers or progression barriers:
-
-- **Rolling Window**: Analyzes rolling batches of 8 completed questions.
-- **Promotion**: Advances when $\ge 7 / 8$ questions are solved correctly on the first attempt without hints.
-- **Demotion**: Gently reduces complexity if $\le 4 / 8$ first-attempt accuracy is observed.
-- **Anti-Oscillation Cooldown**: Enforces an 8-observation observation buffer before allowing subsequent adjustments.
-- **Domain Independence**: Numeracy and vocabulary progress track independently with zero cross-game performance leakage.
-
-### 2. 3-Attempt Secret-Answer Protection
-
-To cultivate genuine problem-solving rather than rote guessing:
-
-- **Attempts 1–2**: Wrong options are gently disabled (muted red), leaving remaining possibilities active while keeping the correct answer hidden.
-- **Attempt 3 (Auto-Reveal)**: If unresolved after 3 tries, the system warmly reveals the correct answer and displays a friendly continue prompt to prevent frustration.
-
-### 3. Responsive Proportional Scaling
-
-Custom-engineered layouts optimized across diverse hardware environments:
-
-- **Mobile (`< 640px`)**: Thumb-first vertical stacking, compact padding, zero-scroll containment.
-- **Laptop & Desktop (`768px – 1080p`)**: Proportional card geometry with interactive hover transitions.
-- **Large Classroom Displays / 4K TVs (`≥ 1536px`)**: Jumbo typography (`text-6xl`), high-visibility buttons (`py-10`), and expansive counting targets (`text-9xl`) visible across a classroom.
-
----
-
-## 🏛️ Architecture & Session Flow
-
-```mermaid
-flowchart TD
-    Start([User Selects Game]) --> Init[Load Game Session]
-    Init --> Gen[Question Generator]
-
-    subgraph Generator Layer
-        Gen --> AntiRep[Anti-Repetition Filter]
-        AntiRep --> DiffFilter[Apply Difficulty Bounds]
-        DiffFilter --> Shuffle[Fisher-Yates 3-Way Shuffle]
-    end
-
-    Shuffle --> Render[Display Interactive Card]
-    Render --> Answer{Child Submits Answer}
-
-    Answer -->|Correct| Success[Score +1 & Celebration State]
-    Answer -->|Wrong: Attempt 1 or 2| Retry[Disable Wrong Option & Prompt Retry]
-    Answer -->|Wrong: Attempt 3| Reveal[Auto-Reveal Correct Answer]
-
-    Retry --> Answer
-    Success --> Tracker[Record Session Observation]
-    Reveal --> Tracker
-
-    subgraph Adaptive Engine
-        Tracker --> WindowCheck{Window >= 8 & Cooldown Clear?}
-        WindowCheck -->|Yes: >= 7/8 Correct| Promote[Advance Difficulty]
-        WindowCheck -->|Yes: <= 4/8 Correct| Demote[Lower Difficulty]
-        WindowCheck -->|No / Intermediate| Retain[Retain Level]
-    end
-
-    Promote --> NextQ[Load Next Question]
-    Demote --> NextQ
-    Retain --> NextQ
-    NextQ --> Gen
-```
-
----
-
-## 📂 Project Structure
-
-```text
-CN-CW/
-├── src/
-│   ├── data/
-│   │   └── countingObjects.ts        # 10 neutral objects & icon registry
-│   ├── engine/
-│   │   ├── questionTypes.ts          # Unified domain types & session models
-│   │   ├── performanceTracker.ts     # In-memory evaluation recorder
-│   │   └── adaptiveDifficulty.ts     # Rule-based difficulty progression engine
-│   ├── hooks/
-│   │   └── useGameSession.ts         # Generic 3-attempt session manager
-│   ├── pages/
-│   │   ├── HomePage.tsx              # Portal menu & hardware scaling container
-│   │   └── games/
-│   │       ├── counting/             # CN: Hitung Angka generator & view
-│   │       └── sentences/            # CW: Lengkapi Kata bank & view
-│   ├── App.tsx                       # Client-side router registry
-│   └── main.tsx                      # SPA entry point
-├── test/
-│   └── verify.ts                     # Automated test suite (200+ iterations)
-├── vercel.json                       # Static rewrite rules for SPA hosting
-├── REKAP_DATA.md                     # Data backbone & generator pseudocode
-└── ROADMAP_CHECKLIST.md              # Progress tracker & engineering backlog
-```
-
----
+<!-- ## 🏛️ Architecture & Session Flow -->
+<!---->
+<!-- ```mermaid -->
+<!-- flowchart TD -->
+<!--     Start([User Selects Game]) --> Init[Load Game Session] -->
+<!--     Init --> Gen[Question Generator] -->
+<!---->
+<!--     subgraph Generator Layer -->
+<!--         Gen --> AntiRep[Anti-Repetition Filter] -->
+<!--         AntiRep --> DiffFilter[Apply Difficulty Bounds] -->
+<!--         DiffFilter --> Shuffle[Fisher-Yates 3-Way Shuffle] -->
+<!--     end -->
+<!---->
+<!--     Shuffle --> Render[Display Interactive Card] -->
+<!--     Render --> Answer{Child Submits Answer} -->
+<!---->
+<!--     Answer -->|Correct| Success[Score +1 & Celebration State] -->
+<!--     Answer -->|Wrong: Attempt 1 or 2| Retry[Disable Wrong Option & Prompt Retry] -->
+<!--     Answer -->|Wrong: Attempt 3| Reveal[Auto-Reveal Correct Answer] -->
+<!---->
+<!--     Retry --> Answer -->
+<!--     Success --> Tracker[Record Session Observation] -->
+<!--     Reveal --> Tracker -->
+<!---->
+<!--     subgraph Adaptive Engine -->
+<!--         Tracker --> WindowCheck{Window >= 8 & Cooldown Clear?} -->
+<!--         WindowCheck -->|Yes: >= 7/8 Correct| Promote[Advance Difficulty] -->
+<!--         WindowCheck -->|Yes: <= 4/8 Correct| Demote[Lower Difficulty] -->
+<!--         WindowCheck -->|No / Intermediate| Retain[Retain Level] -->
+<!--     end -->
+<!---->
+<!--     Promote --> NextQ[Load Next Question] -->
+<!--     Demote --> NextQ -->
+<!--     Retain --> NextQ -->
+<!--     NextQ --> Gen -->
+<!-- ``` -->
+<!---->
+<!-- --- -->
 
 ## 🚀 Quick Start
 
@@ -177,19 +148,6 @@ Typecheck and generate an optimized static production bundle in `dist/`:
 ```bash
 npm run build
 ```
-
----
-
-## 🌐 Deployment
-
-The application is engineered as a zero-backend, zero-database static Single Page Application. It is pre-configured for zero-friction deployment on **Vercel**:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
-
-1. Connect your repository to Vercel.
-2. Select **Vite** as the framework preset.
-3. Build command: `npm run build` | Output directory: `dist`.
-4. Deploy. Client-side routes (`/counting`, `/sentences`) are automatically handled via `vercel.json`.
 
 ---
 
