@@ -66,45 +66,6 @@ _A lightweight, zero-overhead educational platform for early childhood learning.
 <!---->
 <!-- --- -->
 
-<!-- ## 🏛️ Architecture & Session Flow -->
-<!---->
-<!-- ```mermaid -->
-<!-- flowchart TD -->
-<!--     Start([User Selects Game]) --> Init[Load Game Session] -->
-<!--     Init --> Gen[Question Generator] -->
-<!---->
-<!--     subgraph Generator Layer -->
-<!--         Gen --> AntiRep[Anti-Repetition Filter] -->
-<!--         AntiRep --> DiffFilter[Apply Difficulty Bounds] -->
-<!--         DiffFilter --> Shuffle[Fisher-Yates 3-Way Shuffle] -->
-<!--     end -->
-<!---->
-<!--     Shuffle --> Render[Display Interactive Card] -->
-<!--     Render --> Answer{Child Submits Answer} -->
-<!---->
-<!--     Answer -->|Correct| Success[Score +1 & Celebration State] -->
-<!--     Answer -->|Wrong: Attempt 1 or 2| Retry[Disable Wrong Option & Prompt Retry] -->
-<!--     Answer -->|Wrong: Attempt 3| Reveal[Auto-Reveal Correct Answer] -->
-<!---->
-<!--     Retry --> Answer -->
-<!--     Success --> Tracker[Record Session Observation] -->
-<!--     Reveal --> Tracker -->
-<!---->
-<!--     subgraph Adaptive Engine -->
-<!--         Tracker --> WindowCheck{Window >= 8 & Cooldown Clear?} -->
-<!--         WindowCheck -->|Yes: >= 7/8 Correct| Promote[Advance Difficulty] -->
-<!--         WindowCheck -->|Yes: <= 4/8 Correct| Demote[Lower Difficulty] -->
-<!--         WindowCheck -->|No / Intermediate| Retain[Retain Level] -->
-<!--     end -->
-<!---->
-<!--     Promote --> NextQ[Load Next Question] -->
-<!--     Demote --> NextQ -->
-<!--     Retain --> NextQ -->
-<!--     NextQ --> Gen -->
-<!-- ``` -->
-<!---->
-<!-- --- -->
-
 ## 🚀 Quick Start
 
 ### Prerequisites
