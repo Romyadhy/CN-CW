@@ -4,6 +4,9 @@ import { generateSentenceQuestion } from '../src/pages/games/sentences/sentenceG
 import sentenceBank from '../src/pages/games/sentences/sentenceBank'
 import { recordObservation, getRecentObservations, resetTracker } from '../src/engine/performanceTracker'
 import { computeNextDifficulty, resetAdaptiveState, DEFAULT_ADAPTIVE_CONFIG } from '../src/engine/adaptiveDifficulty'
+import { letterBank } from '../src/pages/games/letters/letterBank'
+import { validateLetterBank, validateLetterItem } from '../src/pages/games/letters/letterValidator'
+import { generateLetterQuestion, resetLetterDeck } from '../src/pages/games/letters/letterGenerator'
 
 console.log('🧪 Starting Verification Tests...\n')
 
@@ -131,4 +134,44 @@ const noPromoteWithHint = computeNextDifficulty('counting', 1, 1, 2, 8)
 assert.strictEqual(noPromoteWithHint, 1, 'Questions with hints must not count toward promotion threshold')
 
 console.log('✅ Adaptive Difficulty & Performance Tracker passed all edge cases.')
+
+// 4. Letter Game Tests
+console.log('\n--- 4. Testing Letter Game ---')
+
+const bankRes = validateLetterBank(letterBank)
+assert.strictEqual(bankRes.valid, true, `Letter bank invalid: ${bankRes.errors.join(', ')}`)
+assert.strictEqual(letterBank.length, 30, `Expected 30 items, got ${letterBank.length}`)
+
+for (let i = 0; i < 50; i++) {
+  resetLetterDeck()
+  const q = generateLetterQuestion(1)
+  assert.strictEqual(q.options.length, 3, 'Options must be 3')
+  assert.strictEqual(new Set(q.options).size, 3, 'Options must be distinct')
+  assert(q.options.includes(q.correctLetter), 'Correct letter must be in options')
+  assert.strictEqual(q.options.filter((o) => o === q.correctLetter).length, 1, 'Correct letter must appear exactly once')
+  assert.strictEqual(q.displayWord[q.missingIndex], '_', 'Display word must have underscore at missing index')
+  assert.strictEqual(q.word[q.missingIndex], q.correctLetter, 'Correct letter must match word at index')
+  assert.strictEqual(q.word.toUpperCase(), q.word, 'Word must be uppercase')
+}
+console.log('✅ Letter generator passed 50 iterations.')
+
+// Anti-repetition: with 30 items, running 35 times should not crash and should use deck
+resetLetterDeck()
+const seenIds = new Set<string>()
+for (let i = 0; i < 35; i++) {
+  const q = generateLetterQuestion(1)
+  seenIds.add(q.id)
+}
+assert(seenIds.size > 1, 'Deck should provide variety')
+console.log('✅ Anti-repetition / deck exhaustion passed.')
+
+// Difficulty boundaries
+resetLetterDeck()
+const q1 = generateLetterQuestion(1)
+assert.strictEqual(q1.difficulty, 1)
+const q2 = generateLetterQuestion(3)
+assert(q2.difficulty <= 3, 'Difficulty must not exceed 3')
+console.log('✅ Difficulty boundaries passed.')
+
+console.log('✅ Letter Game Tests passed.')
 console.log('\n🎉 ALL TESTS PASSED SUCCESSFULLY!')

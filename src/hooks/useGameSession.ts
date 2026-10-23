@@ -1,17 +1,20 @@
-// ponytail: session hook with 3-attempt retry & adaptive difficulty tracking
+// ponytail: session hook with elimination-aware reveal & adaptive difficulty tracking
 import { useState, useCallback, useRef } from 'react'
 import { recordObservation, resetTracker } from '../engine/performanceTracker'
-import { computeNextDifficulty, resetAdaptiveState } from '../engine/adaptiveDifficulty'
+import { computeNextDifficulty, resetAdaptiveState, type AdaptiveConfig, DEFAULT_ADAPTIVE_CONFIG } from '../engine/adaptiveDifficulty'
+import type { GameId } from '../engine/questionTypes'
 
 export type FeedbackState = 'none' | 'correct' | 'wrong' | 'revealed'
 
 export function useGameSession<Q>(
-  gameId: 'counting' | 'sentences',
+  gameId: GameId,
   initialLevel: number,
   minLevel: number,
   maxLevel: number,
   generateQuestion: (level: number, lastQuestion?: Q) => Q,
-  getSkill?: (question: Q) => string
+  getSkill?: (question: Q) => string,
+  adaptiveConfig: AdaptiveConfig = DEFAULT_ADAPTIVE_CONFIG,
+  maxMistakesBeforeReveal = 2
 ) {
   const [level, setLevel] = useState(initialLevel)
   const levelRef = useRef(initialLevel)
@@ -34,7 +37,7 @@ export function useGameSession<Q>(
 
   const submitAnswer = useCallback(
     (selectedOption: string | number, isCorrect: boolean) => {
-      // Disallow clicking after correct or revealed
+      // Disallow clicking after correct or revealed (single completion guarantee)
       if (feedback === 'correct' || feedback === 'revealed') return
 
       const currentAttempts = attempts
@@ -63,17 +66,20 @@ export function useGameSession<Q>(
           levelRef.current,
           minLevel,
           maxLevel,
-          totalCompletedRef.current
+          totalCompletedRef.current,
+          adaptiveConfig
         )
         if (nextLvl !== levelRef.current) {
           setLevel(nextLvl)
           levelRef.current = nextLvl
         }
       } else {
-        setWrongSelections((prev) => [...prev, selectedOption])
+        const updatedWrong = [...wrongSelections, selectedOption]
+        setWrongSelections(updatedWrong)
 
-        // After 3 failed attempts, reveal the correct answer
-        if (nextAttempts >= 3) {
+        // For a 3-choice game, 2 incorrect choices leave only 1 possible choice.
+        // At that point, reveal the correct answer to prevent pointless guessing.
+        if (updatedWrong.length >= maxMistakesBeforeReveal) {
           setFeedback('revealed')
           totalCompletedRef.current += 1
 
@@ -92,7 +98,8 @@ export function useGameSession<Q>(
             levelRef.current,
             minLevel,
             maxLevel,
-            totalCompletedRef.current
+            totalCompletedRef.current,
+            adaptiveConfig
           )
           if (nextLvl !== levelRef.current) {
             setLevel(nextLvl)
@@ -103,7 +110,7 @@ export function useGameSession<Q>(
         }
       }
     },
-    [feedback, attempts, question, gameId, minLevel, maxLevel, getSkill]
+    [feedback, attempts, wrongSelections, question, gameId, minLevel, maxLevel, getSkill, adaptiveConfig, maxMistakesBeforeReveal]
   )
 
   const nextQuestion = useCallback(() => {

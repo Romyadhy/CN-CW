@@ -56,13 +56,20 @@ export default function HomePage() {
         </p>
       </header>
 
-      <main className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 2xl:gap-12 w-full max-w-sm sm:max-w-md md:max-w-3xl lg:max-w-4xl 2xl:max-w-6xl">
+      <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 2xl:gap-12 w-full max-w-sm sm:max-w-md md:max-w-3xl lg:max-w-4xl 2xl:max-w-6xl">
         <GameCard
           to="/counting"
           emoji="🔢"
           title="Hitung Angka"
           description="Hitung jumlah benda yang muncul dan pilih angka yang benar!"
           badgeColor="bg-green-500 hover:bg-green-600"
+        />
+        <GameCard
+          to="/letters"
+          emoji="🔤"
+          title="Lengkapi Huruf"
+          description="Temukan huruf yang hilang dalam kata Indonesia!"
+          badgeColor="bg-rose-500 hover:bg-rose-600"
         />
         <GameCard
           to="/sentences"
