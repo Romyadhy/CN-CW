@@ -1,12 +1,12 @@
-# 📋 CN-CW: Project Status, Checklist & Development Roadmap
+# 📋 CN-CL-CW: Project Status, Checklist & Development Roadmap
 
-Dokumen ini adalah **acuan utama perkembangan proyek CN-CW** (_Calculated Number & Complete Word_). Dokumen ini merangkum apa saja yang **sudah selesai dan stabil**, apa saja yang **masih kurang atau belum optimal**, serta **daftar periksa (checklist)** terperinci untuk kolaborasi tim pengembang ke depan.
+Dokumen ini adalah **acuan utama perkembangan proyek CN-CL-CW** (_Calculated Number, Complete Letter & Complete Word_). Dokumen ini merangkum apa saja yang **sudah selesai dan stabil**, apa saja yang **masih kurang atau belum optimal**, serta **daftar periksa (checklist)** terperinci untuk kolaborasi tim pengembang ke depan.
 
 ---
 
 ## 📌 Ringkasan Status Proyek Saat Ini
 
-- **Nama Proyek**: CN-CW (Calculated Number & Complete Word)
+- **Nama Proyek**: CN-CL-CW (Calculated Number, Complete Letter & Complete Word)
 - **Target Pengguna**: Anak Usia Dini (PAUD / TK usia 3–6 tahun)
 - **Teknologi Utama**: React 19, TypeScript 6, Vite 8, Tailwind CSS v4, React Router v7
 - **Status Build**: ✅ Lulus Produksi (`npm run build`) tanpa error/warning
@@ -23,13 +23,14 @@ Dokumen ini adalah **acuan utama perkembangan proyek CN-CW** (_Calculated Number
   - `/` → Beranda utama dengan kartu pilihan game.
   - `/counting` → Game Hitung Angka (CN).
   - `/sentences` → Game Lengkapi Kata (CW).
+  - `/letters` → Game Lengkapi Huruf (CL).
 - [x] **Desain Responsif Multi-Layar (Smooth Scaling)**:
   - Layar HP / Smartphone (`< 640px`): Tombol sentuh jempol nyaman, tanpa overflow scroll.
   - Layar Laptop (`768px – 1024px`): Layout seimbang dengan hover effect interaktif.
   - Layar Monitor Desktop (`1080p FHD`): Kartu game proporsional dan teks jelas.
   - Layar TV Gede (`2K / 4K / ≥ 1536px`): Tombol ekstra besar (`py-10`), font raksasa (`text-6xl`), dan objek berukuran jumbo (`text-9xl`) agar nyaman dilihat dari jarak jauh.
 - [x] **Identitas & Branding Netral**:
-  - Judul bersih: **CN-CW** (_Calculated Number and Complete Word_).
+  - Judul bersih: **CN-CL-CW** (_Calculated Number, Complete Letter & Complete Word_).
   - Emoji netral & universal: 🔢 (_Hitung Angka_) dan 📖 (_Lengkapi Kata_).
 
 ### 2. Game 1: CN — Hitung Angka
@@ -46,7 +47,7 @@ Dokumen ini adalah **acuan utama perkembangan proyek CN-CW** (_Calculated Number
 ### 3. Game 2: CW — Lengkapi Kata
 
 - [x] **Bank Soal Terkurasi (`sentenceBank.ts`)**:
-  - 20 soal kalimat rumpang bahasa Indonesia tanpa kalimat rusak.
+  - 35 soal kalimat rumpang bahasa Indonesia (diperluas dari 20).
   - Terbagi menjadi 3 tingkat kesulitan:
     - _Tingkat 1 (Vocabulary)_: 7 soal kata benda konkret (pisang, air, burung, dsb).
     - _Tingkat 2 (Action)_: 6 soal kata kerja keseharian (makan, memasak, tidur, dsb).
@@ -54,6 +55,14 @@ Dokumen ini adalah **acuan utama perkembangan proyek CN-CW** (_Calculated Number
 - [x] **Penyaringan Sesuai Tingkat Kesulitan**:
   - Soal difilter berdasarkan batas kesulitan aktif (`maxDifficulty`).
   - Soal sebelumnya dicegah muncul berturut-turut berdasarkan ID soal.
+
+### 3b. Game 3: CL — Lengkapi Huruf (Letter Completion)
+
+- [x] **Bank Soal Terkurasi (`letterBank.ts`)**: 30 kata Indonesia dengan 3 tingkat sulit.
+- [x] **Generator (`letterGenerator.ts`)**: Deck shuffled, anti-repeat, reset deck.
+- [x] **Validator (`letterValidator.ts`)**: Cek ID unik, index, opsi 3 berbeda, huruf benar 1x.
+- [x] **Adaptive Independen (`adaptiveDifficulty.ts`)**: `letters` dengan config window 4 / promote 4 / demote 1 / cooldown 4.
+- [x] **UI Halaman (`LettersPage.tsx`)**: Tombol 3 huruf besar, reveal setelah 2 salah, skor +1 sekali.
 
 ### 4. Gameplay & Proteksi Jawaban Anak (Sistem 3 Percobaan)
 
