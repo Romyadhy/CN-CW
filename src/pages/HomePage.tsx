@@ -45,11 +45,14 @@ export default function HomePage() {
     <div className="min-h-screen bg-green-50 flex flex-col items-center justify-center gap-6 sm:gap-10 2xl:gap-16 p-4 sm:p-8 2xl:p-16 transition-colors duration-300">
       <header className="text-center">
         <h1 className="text-3xl sm:text-5xl md:text-6xl 2xl:text-7xl font-black text-green-900 tracking-tight">
-          CN-CW
+          CN-CL-CW
         </h1>
         <p className="mt-2 sm:mt-3 text-green-700 text-base sm:text-xl 2xl:text-3xl font-semibold">
           <span className="font-bold text-green-800">C</span>alculated{" "}
           <span className="font-bold text-green-800">N</span>umber{" "}
+          <span className="italic">and</span>{" "}
+          <span className="font-bold text-green-800">C</span>omplete{" "}
+          <span className="font-bold text-green-800">L</span>etter{" "}
           <span className="italic">and</span>{" "}
           <span className="font-bold text-green-800">C</span>omplete{" "}
           <span className="font-bold text-green-800">W</span>ord
