@@ -1,8 +1,8 @@
 <div align="center">
 
-# CN-CW
+# CN-CL-CW
 
-**Calculated Number & Complete Word**  
+**Calculated Number, Complete Letter & Complete Word**  
 _A lightweight, zero-overhead educational platform for early childhood learning._
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
@@ -24,7 +24,7 @@ _A lightweight, zero-overhead educational platform for early childhood learning.
 
 ## 📌 Overview
 
-**CN-CW** is a client-side Single Page Application (SPA) designed to foster foundational numeracy and language comprehension in young children (_PAUD / TK_). Built around an evidence-based **zero-penalty pedagogical framework**, the system eliminates artificial timers, score penalties, and overt level gates—enabling stress-free, self-paced mastery.
+**CN-CL-CW** is a client-side Single Page Application (SPA) designed to foster foundational numeracy and language comprehension in young children (_PAUD / TK_). Built around an evidence-based **zero-penalty pedagogical framework**, the system eliminates artificial timers, score penalties, and overt level gates—enabling stress-free, self-paced mastery.
 
 ---
 
@@ -32,8 +32,9 @@ _A lightweight, zero-overhead educational platform for early childhood learning.
 
 | Module | Game Mode         | Focus Skill                    | Progression Range                                             | Input Paradigm           |
 | :----- | :---------------- | :----------------------------- | :------------------------------------------------------------ | :----------------------- |
-| **CN** | **Hitung Angka**  | Numeracy & Object Counting     | 1–5 objects (Basic)<br>1–10 objects (Expanded)                | 3-Choice Multiple Choice |
+| **CN** | **Hitung Angka**  | Numeracy & Object Counting     | 1-5 objects (Basic)<br>1-10 objects (Expanded)                | 3-Choice Multiple Choice |
 | **CW** | **Lengkapi Kata** | Indonesian Sentence Completion | Vocabulary (L1)<br>Action Verbs (L2)<br>Contextual Logic (L3) | 3-Choice Vocabulary Fill |
+| **CL** | **Lengkapi Huruf** | Missing Letter Completion | Difficulty 1-3 (short/medium/long words)                    | 3-Choice Letter Tap |
 
 ---
 
