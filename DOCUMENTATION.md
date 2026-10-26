@@ -5,9 +5,9 @@ CN-CL-CW — Calculated Number, Complete Letter & Complete Word. SPA (React 19 +
 
 ## Routes
 - `/` — Home (3 game cards: /counting, /sentences, /letters)
-- `/counting` — Counting objects (CN)
-- `/sentences` — Sentence completion (CW), bank 35 items
-- `/letters` — Missing letter (CL), bank 30 items
+- `/counting` — Counting objects (CN), pool 30 items
+- `/sentences` — Sentence completion (CW), bank 90 items
+- `/letters` — Missing letter (CL), bank 90 items
 
 ## File Structure (key)
 ```
@@ -15,16 +15,18 @@ src/
   App.tsx                  Routes
   pages/HomePage.tsx       Game cards
   pages/games/counting/   Generator + page
-  pages/games/sentences/  Bank (35) + generator + page
-  pages/games/letters/    Types, bank (30), validator, generator, page
+  pages/games/sentences/  Bank (90) + validator + generator + page
+  pages/games/letters/    Bank (90) + validator + generator + page
   engine/
-    questionTypes.ts        Shared types (GameId, LetterQuestion, etc.)
+    questionTypes.ts        Shared types (GameId, all question types, topic unions)
+    deck.ts                 Shared shuffled-deck selection (all 3 games)
+    shuffle.ts              Shared Fisher–Yates shuffle
+    bankValidator.ts        Spec-driven bank validation (unique IDs, 3 options, topic guard)
     adaptiveDifficulty.ts  Window config (default / letters)
     performanceTracker.ts  Observations + reset
   hooks/useGameSession.ts  Session state, reveal after maxMistakes, score +1 once
-  data/                     countingObjects.ts
-
-test/verify.ts             Assertions: generators, banks, adaptive, letter deck
+  data/                     countingObjects.ts (pool 30, topic-tagged)
+test/verify.ts             Assertions: primitives, generators, banks, adaptive, letter deck
 ```
 
 ## Games & Mechanics
@@ -37,18 +39,22 @@ test/verify.ts             Assertions: generators, banks, adaptive, letter deck
 ## Build / Test
 ```
 npm install
-npm test        # verify.ts — generators, banks, adaptive, letter deck, anti-repeat
+npm test        # verify.ts — primitives, generators, banks, adaptive, deck, anti-repeat
 npm run build   # tsc + vite
 npm run dev     # localhost:5173
 ```
 
 ## Key Design Decisions (lazy / ponytail)
 - Reused `useGameSession` for all 3 games; only config changes (`adaptiveConfig`, `maxMistakesBeforeReveal`).
-- Letter generator uses module-level deck for shuffled-deck exhaustion; `resetLetterDeck()` called on restart.
-- Sentence bank expanded to 35 by adding curated items (vocabulary/action/context) instead of rewriting generator.
+- One shared `deck.ts` for shuffled-deck selection in all 3 games; `reset{Counting,Sentence,Letter}Deck()` called on restart.
+- One shared `shuffle.ts` — no generator owns its own Fisher–Yates copy.
+- Sentence bank validator + letter-bank validator both built on `bankValidator.ts` spec.
+- `RawLetterItem`/`LetterQuestion` live in `engine/questionTypes.ts`; `letterTypes.ts` removed.
+- Bank `options` stay hand-curated (quality matters) instead of generated.
 - No TTS / sound / backend / auth added (backlog per plan2.md / roadmap).
 
 ## Limitations / Assumptions
-- `lastQuestion` parameter in `generateLetterQuestion` is passed but not actively used for filtering (deck handles previous via `previousId`); sufficient for current anti-repeat.
+- `displayWord` is derived in the letter generator, never stored in the bank.
 - Images are emoji/icons (`image?: string`); no external assets loaded.
-- Tests use `node:assert` and `tsx`; no extra test framework added.
+- Letter bank intentionally reuses some words with a different blank (e.g. `SEP_TU` vs `SEP_T_U`);
+  the duplicate-prompt check compares the blanked word, not the raw word.
