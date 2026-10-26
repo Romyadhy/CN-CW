@@ -36,32 +36,37 @@ Dokumen ini adalah **acuan utama perkembangan proyek CN-CL-CW** (_Calculated Num
 ### 2. Game 1: CN — Hitung Angka
 
 - [x] **Pembangkit Soal Prosedural (`countingGenerator.ts`)**:
-  - Pool 10 objek netral ramah anak (Apel, Pisang, Jeruk, Anggur, Stroberi, Semangka, Mangga, Nanas, Bintang, Bola).
+  - Pool 30 objek netral ramah anak dalam 5 tema: fruit, animal, transport, shape, nature.
   - Mode Pemula: rentang angka 1–5 objek.
   - Mode Lanjutan: rentang angka 1–10 objek.
-- [x] **Pencegahan Soal Duplikat**:
-  - Objek soal sebelumnya dicegah muncul berturut-turut (_anti-immediate repetition_).
+- [x] **Pencegahan Soal Duplikat (Deck Penuh)**:
+  - Seluruh pool objek dikocok sekali; habis baru diacak ulang (shared `engine/deck.ts`).
   - Tiga pilihan jawaban selalu unik (_distinct_).
-  - Posisi jawaban diacak merata menggunakan algoritma _Fisher-Yates Shuffle_.
+  - Posisi jawaban diacak merata menggunakan algoritma _Fisher-Yates Shuffle_ (`engine/shuffle.ts`).
+  - Tema bergantian saat memungkinkan.
 
 ### 3. Game 2: CW — Lengkapi Kata
 
 - [x] **Bank Soal Terkurasi (`sentenceBank.ts`)**:
-  - 35 soal kalimat rumpang bahasa Indonesia (diperluas dari 20).
-  - Terbagi menjadi 3 tingkat kesulitan:
-    - _Tingkat 1 (Vocabulary)_: 7 soal kata benda konkret (pisang, air, burung, dsb).
-    - _Tingkat 2 (Action)_: 6 soal kata kerja keseharian (makan, memasak, tidur, dsb).
-    - _Tingkat 3 (Context)_: 7 soal pemahaman konteks (payung saat hujan, dsb).
-- [x] **Penyaringan Sesuai Tingkat Kesulitan**:
+  - 90 soal kalimat rumpang bahasa Indonesia (diperluas 20 → 35 → 90).
+  - Terbagi menjadi 3 tingkat kesulitan dengan aturan baku:
+    - _Tingkat 1 (Vocabulary)_: 30 soal kata benda konkret + 9 tema (body, colors, places, transport, weather, family, food, activity, animal, manners).
+    - _Tingkat 2 (Action)_: 30 soal kata kerja / lokasi (memasak, terbang, menanam, ...).
+    - _Tingkat 3 (Context)_: 30 soal sebab/akibat/waktu/budaya (karena lapar, saat sakit, jika bertemu teman, ...).
+  - Validator `sentenceValidator.ts` memastikan ID unik, prompt tidak duplikat, 3 opsi berbeda,
+    jawaban benar tepat 1x, difficulty 1..3, topic valid.
+  - Distraktor selalu satu tema yang sama (mengajarkan, bukan sekadar mudah).
+- [x] **Penyaringan & Anti-Repetisi Penuh (Deck Shuffle)**:
   - Soal difilter berdasarkan batas kesulitan aktif (`maxDifficulty`).
-  - Soal sebelumnya dicegah muncul berturut-turut berdasarkan ID soal.
+  - Seluruh pool eligible dikocok sekali, habis baru diacak ulang (shared `engine/deck.ts`).
+  - Tidak ada pengulangan soal sebelumnya, dan tema bergantian saat memungkinkan.
 
 ### 3b. Game 3: CL — Lengkapi Huruf (Letter Completion)
 
-- [x] **Bank Soal Terkurasi (`letterBank.ts`)**: 30 kata Indonesia dengan 3 tingkat sulit.
-- [x] **Generator (`letterGenerator.ts`)**: Deck shuffled, anti-repeat, reset deck.
-- [x] **Validator (`letterValidator.ts`)**: Cek ID unik, index, opsi 3 berbeda, huruf benar 1x.
-- [x] **Adaptive Independen (`adaptiveDifficulty.ts`)**: `letters` dengan config window 4 / promote 4 / demote 1 / cooldown 4.
+- [x] **Bank Soal Terkurasi (`letterBank.ts`)**: 90 kata Indonesia (30 per tingkat, topic-tagged).
+- [x] **Validator (`letterValidator.ts`)**: built on `engine/bankValidator.ts` spec — unique IDs, blanked-word uniqueness, index match, 3 distinct options, huruf benar 1x, topic guard.
+- [x] **Generator (`letterGenerator.ts`)**: shared `createDeck` shuffled-deck, anti-repeat, topic balancing.
+- [x] **Adaptive Independen (`adaptiveDifficulty.ts`)**: `letters` config window 4 / promote 4 / demote 1 / cooldown 4.
 - [x] **UI Halaman (`LettersPage.tsx`)**: Tombol 3 huruf besar, reveal setelah 2 salah, skor +1 sekali.
 
 ### 4. Gameplay & Proteksi Jawaban Anak (Sistem 3 Percobaan)
@@ -132,21 +137,16 @@ _Kebutuhan paling mendesak karena target anak usia 3–5 tahun belum lancar memb
     - [ ] Simpan preferensi tingkat kesulitan terakhir yang dicapai anak.
     - [ ] Tombol "Ulang" tetap dapat mereset state kapan saja jika ingin memulai dari awal.
 
-- [ ] **2.2 Perluasan Bank Soal Kata (Target 50–100 Soal)**
-  - _Masalah_: Saat ini baru ada 20 soal (6–7 soal per tingkat), cepat terasa berulang setelah 10 menit bermain.
-  - _Rencana_: Tambah bank soal kurasi bertema kurikulum PAUD Indonesia.
-  - _Checklist_:
-    - [ ] Tambahkan kategori: Anggota Tubuh (mata, hidung, telinga, kaki).
-    - [ ] Tambahkan kategori: Warna & Bentuk (merah, biru, bulat, segitiga).
-    - [ ] Tambahkan kategori: Hewan & Suaranya (sapi, ayam, kambing).
-    - [ ] Tambahkan kategori: Tata Krama & Aktivitas Dasar (terima kasih, tolong, maaf).
+- [x] **2.2 Perluasan Bank Soal Kata (Target 50–100 Soal)**
+  - _Hasil_: Selesai. 90 soal bahasa Indonesia terkurasi, topic 9 area PAUD
+    (body, colors, animals, manners, places, transport, weather, family, food, activity),
+    validator shared + duplicate-prompt guard. Total L1=30 / L2=30 / L3=30.
+  - Sisa opsional: tambah ke 100+ dengan menjaga aturan difficulty per-rung (tidak asal tambah).
 
-- [ ] **2.3 Anti-Repetisi Penuh (Mekanisme Deck Shuffle / Kocok Kartu)**
-  - _Masalah_: Anti-repetisi saat ini hanya mengingat 1 soal terakhir (`lastId`), pola `A -> B -> A -> B` masih bisa terjadi.
-  - _Rencana_: Implementasikan algoritma pengocokan kartu (semua soal dalam pool harus habis dimainkan sebelum diacak kembali).
-  - _Checklist_:
-    - [ ] Ganti penyaringan `lastId` dengan array sisa kartu (`deck`).
-    - [ ] Reset dan kocok ulang deck hanya ketika semua soal pada tingkat tersebut sudah selesai dijawab.
+- [x] **2.3 Anti-Repetisi Penuh (Mekanisme Deck Shuffle / Kocok Kartu)**
+  - _Hasil_: Selesai. Shared `engine/deck.ts` dipakai ketiga game — pool dikocok sekali,
+    habis baru diacak ulang, soal terakhir tidak berulang, tema bergantian.
+    Pola `A → B → A → B` tidak lagi terjadi; pool 1-item tidak crash.
 
 ---
 
