@@ -1,5 +1,7 @@
 import countingObjects, { type CountingObject } from '../../../data/countingObjects'
 import type { CountingQuestion } from '../../../engine/questionTypes'
+import { shuffle } from '../../../engine/shuffle'
+import { createDeck } from '../../../engine/deck'
 
 export type CountingConfig = {
   minCount: number
@@ -11,15 +13,6 @@ export const EXPANDED_CONFIG: CountingConfig = { minCount: 1, maxCount: 10 }
 
 function randInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
-}
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = randInt(0, i)
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
 }
 
 /** Generate one wrong answer distinct from correct and other wrongs, within 1..maxCount */
@@ -37,17 +30,18 @@ function wrongAnswer(correct: number, used: number[], max: number): number {
   return pool[randInt(0, pool.length - 1)]
 }
 
-export function generateCountingQuestion(
-  config: CountingConfig,
-  lastObjectName?: string
-): CountingQuestion {
-  // Avoid immediate object repeat when alternatives exist
-  const pool =
-    countingObjects.length > 1
-      ? countingObjects.filter((o: CountingObject) => o.name !== lastObjectName)
-      : countingObjects
+// Whole object pool is shuffled once; reshuffled only when exhausted.
+const deck = createDeck<CountingObject>(
+  (o) => o.name,
+  (o) => o.topic
+)
 
-  const obj = pool[randInt(0, pool.length - 1)]
+export function resetCountingDeck(): void {
+  deck.reset()
+}
+
+export function generateCountingQuestion(config: CountingConfig): CountingQuestion {
+  const obj = deck.next(countingObjects)
   const correct = randInt(config.minCount, config.maxCount)
 
   const w1 = wrongAnswer(correct, [], config.maxCount)
