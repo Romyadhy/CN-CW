@@ -5,8 +5,8 @@ import { generateLetterQuestion, resetLetterDeck } from './letterGenerator'
 import { LETTERS_ADAPTIVE_CONFIG } from '../../../engine/adaptiveDifficulty'
 import type { LetterQuestion } from '../../../engine/questionTypes'
 
-function generateQ(level: number, last?: LetterQuestion) {
-  return generateLetterQuestion(level, last)
+function generateQ(level: number) {
+  return generateLetterQuestion(level)
 }
 
 export default function LettersPage() {
@@ -26,7 +26,7 @@ export default function LettersPage() {
     1,
     3,
     stableGenerate,
-    (q) => q.category,
+    (q) => q.topic,
     LETTERS_ADAPTIVE_CONFIG,
     2
   )
