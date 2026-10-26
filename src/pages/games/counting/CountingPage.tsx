@@ -8,9 +8,9 @@ import {
 } from './countingGenerator'
 import type { CountingQuestion } from '../../../engine/questionTypes'
 
-function generateQ(level: number, last?: CountingQuestion) {
+function generateQ(level: number) {
   const config = level >= 2 ? EXPANDED_CONFIG : BASIC_CONFIG
-  return generateCountingQuestion(config, last?.objectName)
+  return generateCountingQuestion(config)
 }
 
 export default function CountingPage() {
