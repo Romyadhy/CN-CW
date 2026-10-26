@@ -4,9 +4,9 @@ import { useGameSession } from '../../../hooks/useGameSession'
 import { generateSentenceQuestion } from './sentenceGenerator'
 import type { SentenceQuestion } from '../../../engine/questionTypes'
 
-function generateQ(level: number, last?: SentenceQuestion) {
+function generateQ(level: number) {
   const maxDiff = (level === 3 ? 3 : level === 2 ? 2 : 1) as 1 | 2 | 3
-  return generateSentenceQuestion({ maxDifficulty: maxDiff }, last?.id)
+  return generateSentenceQuestion({ maxDifficulty: maxDiff })
 }
 
 export default function SentencesPage() {
