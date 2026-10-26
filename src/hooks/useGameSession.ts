@@ -11,7 +11,7 @@ export function useGameSession<Q>(
   initialLevel: number,
   minLevel: number,
   maxLevel: number,
-  generateQuestion: (level: number, lastQuestion?: Q) => Q,
+  generateQuestion: (level: number) => Q,
   getSkill?: (question: Q) => string,
   adaptiveConfig: AdaptiveConfig = DEFAULT_ADAPTIVE_CONFIG,
   maxMistakesBeforeReveal = 2
@@ -114,7 +114,7 @@ export function useGameSession<Q>(
   )
 
   const nextQuestion = useCallback(() => {
-    setQuestion((prev) => generateQuestion(levelRef.current, prev))
+    setQuestion(generateQuestion(levelRef.current))
     setFeedback('none')
     setAttempts(0)
     setWrongSelections([])
