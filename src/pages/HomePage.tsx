@@ -34,7 +34,7 @@ function GameCard({
       <span
         className={`mt-2 rounded-full ${badgeColor} px-6 sm:px-8 2xl:px-12 py-2.5 sm:py-3.5 2xl:py-5 text-white font-bold text-base sm:text-xl 2xl:text-2xl shadow-md group-hover:shadow-lg active:scale-90 transition-all`}
       >
-        Mulai Main →
+        Mulai Main
       </span>
     </Link>
   );
